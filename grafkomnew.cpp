@@ -169,6 +169,163 @@ void drawBrickWall(float x, float y, int rows, int columns, float brickWidth, fl
     }
 }
 
+
+void drawCharacter(float x, float y) {
+    // Draw head
+    glColor3ub(255, 220, 180); // Skin color
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.04f, y + 0.14f);
+    glVertex2f(x + 0.04f, y + 0.14f);
+    glVertex2f(x + 0.04f, y + 0.2f);
+    glVertex2f(x - 0.04f, y + 0.2f);
+    glEnd();
+
+    // Draw hair
+    glColor3ub(100, 60, 40); // Brown hair
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.04f, y + 0.19f);
+    glVertex2f(x + 0.04f, y + 0.19f);
+    glVertex2f(x + 0.04f, y + 0.21f);
+    glVertex2f(x - 0.04f, y + 0.21f);
+    glEnd();
+
+    // Draw eyes
+    glColor3ub(0, 0, 0);// Black eyes
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.018f, y + 0.17f);
+    glVertex2f(x - 0.012f, y + 0.17f);
+    glVertex2f(x - 0.012f, y + 0.18f);
+    glVertex2f(x - 0.018f, y + 0.18f);
+
+    glVertex2f(x + 0.012f, y + 0.17f);
+    glVertex2f(x + 0.018f, y + 0.17f);
+    glVertex2f(x + 0.018f, y + 0.18f);
+    glVertex2f(x + 0.012f, y + 0.18f);
+    glEnd();
+
+    // Draw ears
+    glColor3ub(255, 220, 180); // Skin color for ears
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.045f, y + 0.17f); // Left ear
+    glVertex2f(x - 0.04f, y + 0.17f);
+    glVertex2f(x - 0.04f, y + 0.19f);
+    glVertex2f(x - 0.045f, y + 0.19f);
+
+    glVertex2f(x + 0.04f, y + 0.17f); // Right ear
+    glVertex2f(x + 0.045f, y + 0.17f);
+    glVertex2f(x + 0.045f, y + 0.19f);
+    glVertex2f(x + 0.04f, y + 0.19f);
+    glEnd();
+
+    // Draw nose
+    glColor3ub(255, 200, 170); // Nose color slightly darker than skin
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.005f, y + 0.155f);
+    glVertex2f(x + 0.005f, y + 0.155f);
+    glVertex2f(x + 0.005f, y + 0.16f);
+    glVertex2f(x - 0.005f, y + 0.16f);
+    glEnd();
+
+    // Draw mouth
+    glColor3ub(255, 100, 100); // Red for mouth
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.012f, y + 0.14f);
+    glVertex2f(x + 0.012f, y + 0.14f);
+    glVertex2f(x + 0.012f, y + 0.145f);
+    glVertex2f(x - 0.012f, y + 0.145f);
+    glEnd();
+
+    // Draw body
+    glColor3ub(150, 250, 15); // Red shirt
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.05f, y + 0.07f);
+    glVertex2f(x + 0.05f, y + 0.07f);
+    glVertex2f(x + 0.05f, y + 0.14f);
+    glVertex2f(x - 0.05f, y + 0.14f);
+    glEnd();
+
+    // Draw arms
+    glColor3ub(255, 220, 180); // Skin color for arms
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.06f, y + 0.08f); // Left arm
+    glVertex2f(x - 0.05f, y + 0.08f);
+    glVertex2f(x - 0.05f, y + 0.14f);
+    glVertex2f(x - 0.06f, y + 0.14f);
+
+    glVertex2f(x + 0.05f, y + 0.08f); // Right arm
+    glVertex2f(x + 0.06f, y + 0.08f);
+    glVertex2f(x + 0.06f, y + 0.14f);
+    glVertex2f(x + 0.05f, y + 0.14f);
+    glEnd();
+
+    // Draw legs
+    glColor3ub(0, 0, 255); // Blue pants
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.025f, y);
+    glVertex2f(x + 0.025f, y);
+    glVertex2f(x + 0.025f, y + 0.07f);
+    glVertex2f(x - 0.025f, y + 0.07f);
+    glEnd();
+
+    // Draw feet
+    glColor3ub(0, 0, 0); // Black shoes
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.025f, y - 0.02f); // Left shoe
+    glVertex2f(x, y - 0.02f);
+    glVertex2f(x, y);
+    glVertex2f(x - 0.025f, y);
+
+    glVertex2f(x, y - 0.02f); // Right shoe
+    glVertex2f(x + 0.025f, y - 0.02f);
+    glVertex2f(x + 0.025f, y);
+    glVertex2f(x, y);
+    glEnd();
+}
+
+void drawFairy(float x, float y) {
+    // Draw head
+    glColor3ub(255, 220, 180); // Skin color
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++) {
+        float theta = i * 3.14159f / 180;
+        glVertex2f(x + 0.01f * cos(theta), y + 0.01f * sin(theta));
+    }
+    glEnd();
+
+    // Draw wings
+    glColor4ub(200, 200, 255, 150); // Light blue with transparency
+    glBegin(GL_TRIANGLES);
+    glVertex2f(x, y); // Left wing
+    glVertex2f(x - 0.03f, y + 0.02f);
+    glVertex2f(x - 0.01f, y + 0.05f);
+
+    glVertex2f(x, y); // Right wing
+    glVertex2f(x + 0.03f, y + 0.02f);
+    glVertex2f(x + 0.01f, y + 0.05f);
+    glEnd();
+
+    // Draw body
+    glColor3ub(255, 100, 200); // Pink color for body
+    glBegin(GL_QUADS);
+    glVertex2f(x - 0.005f, y - 0.02f);
+    glVertex2f(x + 0.005f, y - 0.02f);
+    glVertex2f(x + 0.005f, y);
+    glVertex2f(x - 0.005f, y);
+    glEnd();
+
+    // Draw legs
+    glBegin(GL_LINES);
+    glVertex2f(x - 0.005f, y - 0.02f); // Left leg
+    glVertex2f(x - 0.008f, y - 0.04f);
+
+    glVertex2f(x + 0.005f, y - 0.02f); // Right leg
+    glVertex2f(x + 0.008f, y - 0.04f);
+    glEnd();
+}
+
+
+
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT); // Membersihkan layar dengan warna latar belakang
 
@@ -201,6 +358,15 @@ void display() {
     drawTree(-0.8f, -0.3f); 
     drawTree(-0.4f, -0.3f);  
     drawTree(0.0f, -0.3f);  
+
+    // Karakter
+    drawCharacter(-0.98f, -0.7f); // Tambahkan karakter di antara pohon
+
+    // Draw two fairies at different positions in the sky
+    drawFairy(-0.2f, 0.5f); // Left fairy
+    drawFairy(0.3f, 0.6f);  // Right fairy
+    drawFairy(-0.9f, 0.5f); // Left fairy
+    drawFairy(0.4f, 0.8f);  // Right fairy
 
     // Menambahkan tiga awan cantik di langit
     drawCloud(-0.6f, 0.6f);
