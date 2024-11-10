@@ -1,6 +1,8 @@
 #include <glut.h>
 #include <cmath>
 
+float characterX = -0.98f; // Posisi X karakter
+
 // Fungsi untuk menggambar lingkaran
 void drawCircle(float x, float y, float radius, int segments) {
     glBegin(GL_TRIANGLE_FAN);
@@ -323,6 +325,15 @@ void drawFairy(float x, float y) {
     glEnd();
 }
 
+void keyboard(unsigned char key, int x, int y) {
+    if (key == 'a' || key == 'A') { // Tombol A atau a untuk bergerak ke kiri
+        characterX -= 0.03f; // Mengurangi posisi X
+    }
+    if (key == 'd' || key == 'D') { // Tombol D atau d untuk bergerak ke kanan
+        characterX += 0.03f; // Menambah posisi X
+    }
+    glutPostRedisplay(); // Memperbarui tampilan
+}
 
 
 
@@ -360,7 +371,7 @@ void display() {
     drawTree(0.0f, -0.3f);  
 
     // Karakter
-    drawCharacter(-0.98f, -0.7f); // Tambahkan karakter di antara pohon
+    drawCharacter(characterX, -0.7f); // Tambahkan karakter di antara pohon
 
     // Draw two fairies at different positions in the sky
     drawFairy(-0.2f, 0.5f); // Left fairy
@@ -404,11 +415,12 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(800, 600); 
     glutCreateWindow("Kerajaan dan Pemandangan Alam");
-
+    glutKeyboardFunc(keyboard);
     init(); 
 
     glutDisplayFunc(display);
     glutMainLoop(); 
+   
 
     return 0;
 }
