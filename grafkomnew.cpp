@@ -150,14 +150,23 @@ void drawFinishLine() {
     glEnd();
 }
 
-// Fungsi untuk menggambar rintangan runcing
-void drawSpike(float x, float y) {
-    glBegin(GL_TRIANGLES);
-    glColor3f(0.8f, 0.0f, 0.0f);
-    glVertex2f(x - 0.02f, y);    
-    glVertex2f(x + 0.02f, y);    
-    glVertex2f(x, y + 0.1f);     
-    glEnd();
+//menggammbar batu rintangan
+void drawBrickWall(float x, float y, int rows, int columns, float brickWidth, float brickHeight) {
+    glColor3f(0.5f, 0.4f, 0.2f);
+
+    for (int i = 0; i < rows; i++) {
+        float offsetX = (i % 2 == 0) ? 0.0f : brickWidth / 2.0f; // Offset untuk pola selang-seling
+        for (int j = 0; j < columns; j++) {
+            float brickX = x + offsetX + j * brickWidth - (columns * brickWidth) / 2.0f;
+            float brickY = y - i * brickHeight;
+            glBegin(GL_QUADS);
+            glVertex2f(brickX, brickY);
+            glVertex2f(brickX + brickWidth, brickY);
+            glVertex2f(brickX + brickWidth, brickY - brickHeight);
+            glVertex2f(brickX, brickY - brickHeight);
+            glEnd();
+        }
+    }
 }
 
 void display() {
@@ -201,10 +210,15 @@ void display() {
     // Menambahkan matahari dengan sinar
     drawSun(-0.8f, 0.8f, 0.1f); 
 
-    // Menambahkan tiga rintangan runcing di rumput
-    drawSpike(-0.6f, -0.7f); 
-    drawSpike(0.0f, -0.7f);  
-    drawSpike(0.6f, -0.7f);  
+
+    // Menggambar batu bata kecil yang tersusun ke atas di posisi awal
+    drawBrickWall(-0.6f, -0.7f, 6, 3, 0.05f, 0.02f);
+
+    // Menambahkan tumpukan batu baru di samping kanan dengan jarak 0.5 unit
+    drawBrickWall(-0.1f, -0.7f, 6, 3, 0.05f, 0.02f); // Tumpukan pertama di kanan
+    drawBrickWall(0.4f, -0.7f, 6, 3, 0.05f, 0.02f); // Tumpukan kedua di kanan
+
+
 
     glutSwapBuffers(); // Menukar buffer agar tampilan diperbarui
 }
