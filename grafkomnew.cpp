@@ -1,4 +1,4 @@
-#include <freeglut.h>
+#include <glut.h>
 #include <cmath>
 
 // Fungsi untuk menggambar lingkaran
