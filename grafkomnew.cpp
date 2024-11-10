@@ -2,6 +2,9 @@
 #include <cmath>
 
 float characterX = -0.98f; // Posisi X karakter
+float cloudX1 = -0.6f;
+float cloudX2 = 0.0f;
+float cloudX3 = 0.6f;
 
 // Fungsi untuk menggambar lingkaran
 void drawCircle(float x, float y, float radius, int segments) {
@@ -379,10 +382,24 @@ void display() {
     drawFairy(-0.9f, 0.5f); // Left fairy
     drawFairy(0.4f, 0.8f);  // Right fairy
 
-    // Menambahkan tiga awan cantik di langit
-    drawCloud(-0.6f, 0.6f);
-    drawCloud(0.0f, 0.8f); 
-    drawCloud(0.6f, 0.7f);  
+    cloudX1 += 0.0001f; // Kecepatan awan pertama
+    cloudX2 += 0.0001f; // Kecepatan awan kedua
+    cloudX3 += 0.0001f; // Kecepatan awan ketiga
+
+    // Jika awan keluar dari layar di sisi kanan, kembalikan ke sisi kiri
+    if (cloudX1 > 1.0f) { // Ubah dari -0.7f menjadi 1.0f
+        cloudX1 = -0.5f; // Kembalikan awan pertama ke sisi kiri (ubah nilai ini)
+    }
+    if (cloudX2 > 1.0f) { // Ubah dari -0.7f menjadi 1.0f
+        cloudX2 = -0.5f; // Kembalikan awan kedua ke sisi kiri (ubah nilai ini)
+    }
+    if (cloudX3 > 1.0f) { // Ubah dari -0.7f menjadi 1.0f
+        cloudX3 = -0.5f; // Kembalikan awan ketiga ke sisi kiri (ubah nilai ini)
+    }
+    // Menggambar semua awan
+    drawCloud(cloudX1, 0.6f); // Awan pertama
+    drawCloud(cloudX2, 0.8f); // Awan kedua
+    drawCloud(cloudX3, 0.7f); // Awan ketiga
 
     // Menambahkan matahari dengan sinar
     drawSun(-0.8f, 0.8f, 0.1f); 
@@ -419,6 +436,7 @@ int main(int argc, char** argv) {
     init(); 
 
     glutDisplayFunc(display);
+    glutIdleFunc(display);
     glutMainLoop(); 
    
 
