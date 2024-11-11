@@ -2,9 +2,20 @@
 #include <cmath>
 
 float characterX = -0.98f; // Posisi X karakter
+float characterY = -0.7f;   // Posisi Y karakter awal
+bool isJumping = false;     // Status lompat
+float jumpSpeed = 16.0f;    // Kecepatan awal saat melompat
+float gravity = 0.005f;     // Gravitasi
+
 float cloudX1 = -0.6f;
 float cloudX2 = 0.0f;
 float cloudX3 = 0.6f;
+
+// Variabel posisi batu
+float brickX = 0.3f;        // Posisi X batu (rintangan)
+float brickY = -0.7f;       // Posisi Y batu
+float brickWidth = 0.15f;   // Lebar tumpukan batu
+float brickHeight = 0.5f;  // Tinggi tumpukan batu
 
 // Fungsi untuk menggambar lingkaran
 void drawCircle(float x, float y, float radius, int segments) {
@@ -140,39 +151,27 @@ void drawCastle(float x, float y) {
 }
 
 
-void drawFinishLine() {
-    // Garis vertikal kiri
-    glBegin(GL_LINES);
-    glColor3f(0.0f, 0.0f, 0.0f); 
-    glVertex2f(-0.95f, -0.4f);
-    glVertex2f(-0.95f, -1.0f);
-    glEnd();
 
-    // Garis vertikal kanan
-    glBegin(GL_LINES);
-    glVertex2f(0.95f, -0.4f); 
-    glVertex2f(0.95f, -1.0f); 
-    glEnd();
-}
-
-//menggammbar batu rintangan
 void drawBrickWall(float x, float y, int rows, int columns, float brickWidth, float brickHeight) {
-    glColor3f(0.5f, 0.4f, 0.2f);
-
+    glColor3f(0.5f, 0.4f, 0.2f);  // Warna bata
     for (int i = 0; i < rows; i++) {
-        float offsetX = (i % 2 == 0) ? 0.0f : brickWidth / 2.0f; // Offset untuk pola selang-seling
+        float offsetX = (i % 2 == 0) ? 0.0f : brickWidth / 2.0f;  // Offset setiap baris
         for (int j = 0; j < columns; j++) {
             float brickX = x + offsetX + j * brickWidth - (columns * brickWidth) / 2.0f;
             float brickY = y - i * brickHeight;
-            glBegin(GL_QUADS);
-            glVertex2f(brickX, brickY);
-            glVertex2f(brickX + brickWidth, brickY);
-            glVertex2f(brickX + brickWidth, brickY - brickHeight);
-            glVertex2f(brickX, brickY - brickHeight);
-            glEnd();
+
+            glBegin(GL_QUADS);  // Mulai menggambar bata
+            glVertex2f(brickX, brickY);                    // Kiri atas
+            glVertex2f(brickX + brickWidth, brickY);       // Kanan atas
+            glVertex2f(brickX + brickWidth, brickY - brickHeight); // Kanan bawah
+            glVertex2f(brickX, brickY - brickHeight);      // Kiri bawah
+            glEnd();  // Selesai menggambar bata
         }
+
     }
 }
+
+
 
 
 void drawCharacter(float x, float y) {
@@ -335,10 +334,34 @@ void keyboard(unsigned char key, int x, int y) {
     if (key == 'd' || key == 'D') { // Tombol D atau d untuk bergerak ke kanan
         characterX += 0.03f; // Menambah posisi X
     }
+    if ((key == 'w' || key == 'W') && !isJumping) {
+        isJumping = true;
+        jumpSpeed = 0.08f;  // Kecepatan lompatan yang lebih lambat
+    }
     glutPostRedisplay(); // Memperbarui tampilan
 }
 
+void updateJump() {
+    if (isJumping) {
+        // Bergerak ke atas
+        characterY += jumpSpeed;  // Gerakkan karakter ke atas
+        jumpSpeed -= gravity;     // Mengurangi kecepatan lompatan karena gravitasi
 
+        // Cek apakah karakter sudah mencapai puncak lompatan dan mulai turun
+        if (jumpSpeed <= 0.0f) {
+            isJumping = false;  // Hentikan lompatan ketika mencapai puncak
+        }
+    }
+    else {
+        // Jika karakter tidak melompat, gravitasi akan menarik karakter ke bawah
+        if (characterY > -0.7f) {
+            characterY -= gravity;  // Menarik karakter ke bawah secara bertahap
+        }
+        else {
+            characterY = -0.7f;  // Menjaga agar karakter tidak jatuh di bawah tanah
+        }
+    }
+}
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT); // Membersihkan layar dengan warna latar belakang
@@ -362,10 +385,7 @@ void display() {
     glVertex2f(-1.0f, -0.4f); 
     glEnd();
 
-    // Menggambar garis finish
-    drawFinishLine();
-
-    // Menggambar istana atau bangunan kerajaan
+    //Menggambar istana atau bangunan kerajaan
     drawCastle(0.6f, -0.3f); 
 
     // Menambahkan 3 pohon  kecil yang berjejer dari kiri ke kanan
@@ -373,8 +393,40 @@ void display() {
     drawTree(-0.4f, -0.3f);  
     drawTree(0.0f, -0.3f);  
 
+    // Logika lompatan
+    if (isJumping) {
+        characterY += jumpSpeed;  // Gerakkan karakter ke atas
+        jumpSpeed -= gravity;     // Kurangi kecepatan dengan gravitasi
+        if (characterY <= -0.7f) { // Jika karakter turun ke posisi awal
+            characterY = -0.7f;
+            isJumping = false;  // Hentikan lompatan
+        }
+    }
+
+    // Update posisi karakter berdasarkan gravitasi dan lompatan
+    updateJump();
+
+    
+    // Menggambar batu bata kecil yang tersusun ke atas di posisi awal
+    drawBrickWall(-0.6f, -0.65f, 4, 2, 0.05f, 0.02f);
+
+    // Menambahkan tumpukan batu baru di samping kanan dengan jarak 0.5 unit
+    drawBrickWall(-0.1f, -0.65f, 4, 2, 0.05f, 0.02f); // Tumpukan pertama di kanan
+    drawBrickWall(0.4f, -0.65f, 4, 2, 0.05f, 0.02f); // Tumpukan kedua di kanan
+
+
     // Karakter
-    drawCharacter(characterX, -0.7f); // Tambahkan karakter di antara pohon
+    drawCharacter(characterX, characterY); // Tambahkan karakter di antara pohon
+
+    // Logika lompatan
+    if (isJumping) {
+        characterY += jumpSpeed;  // Gerakkan karakter ke atas
+        jumpSpeed -= gravity;     // Kurangi kecepatan dengan gravitasi
+        if (characterY <= -0.7f) { // Jika karakter turun ke posisi awal
+            characterY = -0.7f;
+            isJumping = false;  // Hentikan lompatan
+        }
+    }
 
     // Draw two fairies at different positions in the sky
     drawFairy(-0.2f, 0.5f); // Left fairy
@@ -404,15 +456,7 @@ void display() {
     // Menambahkan matahari dengan sinar
     drawSun(-0.8f, 0.8f, 0.1f); 
 
-
-    // Menggambar batu bata kecil yang tersusun ke atas di posisi awal
-    drawBrickWall(-0.6f, -0.7f, 6, 3, 0.05f, 0.02f);
-
-    // Menambahkan tumpukan batu baru di samping kanan dengan jarak 0.5 unit
-    drawBrickWall(-0.1f, -0.7f, 6, 3, 0.05f, 0.02f); // Tumpukan pertama di kanan
-    drawBrickWall(0.4f, -0.7f, 6, 3, 0.05f, 0.02f); // Tumpukan kedua di kanan
-
-
+   
 
     glutSwapBuffers(); // Menukar buffer agar tampilan diperbarui
 }
@@ -423,7 +467,8 @@ void init() {
     // Mengatur mode proyeksi dan mengatur sistem koordinat 2D
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0); // Sistem koordinat 2D dengan ukuran -1.0 hingga 1.0
+    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0); // Pengaturan tampilan ortografis
+   
 }
 
 int main(int argc, char** argv) {
